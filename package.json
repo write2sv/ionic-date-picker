@@ -1,6 +1,6 @@
 {
-  "name": "ionic-date-picker",
-  "version": "0.0.1",
+  "name": "ionic-calendar-date-picker",
+  "version": "0.0.4",
   "description": "Ionic based calendar date picker",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",

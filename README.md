@@ -8,23 +8,39 @@ This is a date picker component for your Ionic 3 app.
 ### 1) Install using npm ###
 
 ```
-    npm i ionic-date-picker --save
+    npm i ionic-calendar-date-picker --save
 ```
 
 ### 2) Add it to your ngModule in app.module ###
 
 ```
- import { DatePickerModule } from 'ionic-date-picker';
+ import { DatePickerModule, DatePickerComponent, DatePickerProvider } from 'ionic-calendar-date-picker';
 ```
 ```
-   imports: [
-        IonicModule.forRoot(App),
-        DatePickerModule,
-    ],
+   
+@NgModule({
+ ...,
+  imports: [
+    ....
+    DatePickerModule,
+    ....
+  ],
+  entryComponents: [
+    ....  
+    DatePickerComponent,
+    ....
+  ],
+  providers: [
+    ....
+    DatePickerProvider,
+    .....
+  ]
+})
+export class AppModule {}
 ```
-### 3) Use the directive ionic-date-picker in your html  ###
+### 3) Use the directive ionic-calendar-date-picker in your html  ###
 ```
-    <ionic-date-picker (onSelect)="dateSelected($event)"></ionic-date-picker>	
+    <ionic-calendar-date-picker (onSelect)="dateSelected($event)"></ionic-calendar-date-picker>	
 ```
 
 
