@@ -1,0 +1,41 @@
+{
+  "name": "ionic-date-picker",
+  "version": "0.0.1",
+  "description": "Ionic based calendar date picker",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "ngc": "ngc",
+    "build": "rm -rf dist && npm run ngc",
+    "publishPackage": "npm run build && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/write2sv/ionic-date-picker"
+  },
+  "keywords": [],
+  "author": "Venkata Surya Sagi",
+  "license": "MIT",
+  "homepage": "https://github.com/write2sv/ionic-date-picker",
+  "devDependencies": {
+    "@angular/common": "5.0.3",
+    "@angular/compiler": "5.0.3",
+    "@angular/compiler-cli": "5.0.3",
+    "@angular/core": "5.0.3",
+    "@angular/forms": "^5.2.7",
+    "@angular/platform-browser": "5.0.3",
+    "@angular/platform-browser-dynamic": "5.0.3",
+    "@types/node": "^9.4.6",
+    "ionic-angular": "3.9.2",
+    "rxjs": "5.5.2",
+    "typescript": "2.4.2",
+    "zone.js": "0.8.18"
+  },
+  "dependencies": {
+    "dayspan": "^0.12.4",
+    "moment": "^2.22.2"
+  }
+}

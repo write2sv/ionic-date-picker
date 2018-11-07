@@ -1,0 +1,58 @@
+date-picker-component {
+    .not-this-month {
+      color: #8b8b8b;
+    }
+
+    .item {
+        .item-inner {
+          border-bottom: none !important;
+        }
+      }
+  
+    .days-label {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .months-label {
+      font-size: 15px;
+    }
+
+    .calendar-month-label {
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .item-selected {
+      background: color($colors, primary);
+      color: color($colors, light) !important;
+    }
+
+    .current-item {
+      color: color($colors, secondary);
+    }
+  
+    .forward-button {
+      float: right;
+    }
+  
+    ion-icon {
+      font-size: 25px;
+    }
+
+    .year-range {
+      font-size: 15px;
+      font-weight: 550;
+      &.button[disabled] {
+        opacity: 1;
+        color: gray;
+      }
+    }
+
+    .calendar-button {
+      text-decoration: underline;
+      padding-right: 2px !important;
+      padding-left: 2px !important;
+    }
+  }
+  
