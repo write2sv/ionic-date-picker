@@ -88,7 +88,6 @@ const HTML_CODE = `
 `;
 
 const CSS_STYLE = `
-date-picker-component {
   .not-this-month {
     color: #8b8b8b;
   }
@@ -144,7 +143,6 @@ date-picker-component {
     padding-right: 2px !important;
     padding-left: 2px !important;
   }
-}
 `;
 
 @Component({
