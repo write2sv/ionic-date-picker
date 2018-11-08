@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Day } from 'dayspan';
-import { DatePickerProvider } from '../providers/date-picker-provider';
+import { Calendar, Day } from 'dayspan';
 import * as moment from 'moment';
 
 const HTML_CODE = `
@@ -175,9 +174,6 @@ export class DatePickerComponent implements OnInit {
   startYear: number;
   endYear: number;
 
-  constructor(private datePickerProvider: DatePickerProvider) {
-  }
-
   ngOnInit() {
     this.initOptions();
     this.createCalendarWeeks();
@@ -189,16 +185,16 @@ export class DatePickerComponent implements OnInit {
     this.dayHighlighted = this.date ? Day.fromDate(this.date) : Day.today();
 
     if (this.date) {
-        this.daySelected = this.dayHighlighted;
+      this.daySelected = this.dayHighlighted;
     }
   }
 
   createCalendarWeeks() {
-    this.weeks = this.datePickerProvider.generateCalendarWeeks(
-        Day.fromMoment(
-          moment(this.monthSelected + '-01-' + this.yearSelected, 'MM-DD-YYYY')
-        )
-      );
+    this.weeks = this.generateCalendarWeeks(
+      Day.fromMoment(
+        moment(this.monthSelected + '-01-' + this.yearSelected, 'MM-DD-YYYY')
+      )
+    );
   }
 
   previous() {
@@ -235,7 +231,7 @@ export class DatePickerComponent implements OnInit {
   }
 
   showMonthView() {
-    this.showView = 'month';``
+    this.showView = 'month'; ``
   }
 
   showYearView() {
@@ -293,6 +289,23 @@ export class DatePickerComponent implements OnInit {
 
   isToday(day) {
     return this.yearSelected === this.currentYear && this.monthSelected === this.currentMonth && this.currentDay === day;
+  }
+
+  generateCalendarWeeks(forDay: Day): Array<any> {
+    const weeks: Array<any> = [];
+    const month = Calendar.months<string, any>(1, forDay);
+    const numOfWeeks = month.days.length / 7;
+
+    let dayIndex = 0;
+    for (let week = 0; week < numOfWeeks; week++) {
+      const days = [];
+      for (let day = 0; day < 7; day++) {
+        days.push(month.days[dayIndex]);
+        dayIndex++;
+      }
+      weeks.push(days);
+    }
+    return weeks;
   }
 
 }

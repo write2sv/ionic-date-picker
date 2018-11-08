@@ -14,7 +14,7 @@ This is a date picker component for your Ionic 3 app.
 ### 2) Add it to your ngModule in app.module ###
 
 ```
- import { DatePickerModule, DatePickerComponent, DatePickerProvider } from 'ionic-calendar-date-picker';
+import { DatePickerModule } from 'ionic-calendar-date-picker';
 ```
 ```
    
@@ -22,19 +22,10 @@ This is a date picker component for your Ionic 3 app.
  ...,
   imports: [
     ....
-    DatePickerModule,
+    DatePickerModule
     ....
   ],
-  entryComponents: [
-    ....  
-    DatePickerComponent,
-    ....
-  ],
-  providers: [
-    ....
-    DatePickerProvider,
-    .....
-  ]
+  ....
 })
 export class AppModule {}
 ```
