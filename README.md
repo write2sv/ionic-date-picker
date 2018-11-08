@@ -43,7 +43,9 @@ export class AppModule {}
  `[dayLabels]` - An array of day label strings. (not required. Default is ['S', 'M', 'T', 'W', 'T', 'F', 'S'];)
 
 ## Styling Options ###
-
+  ```
+    <ionic-calendar-date-picker [notInCalendarStyle]="{'color': 'red', 'font-weight': 'bold'}"></ionic-calendar-date-picker>
+  ```
   `[notInCalendarStyle]` - When a day is not in the calendar. Not Required. Default: { 'color': '#8b8b8b' };
   `[dayLabelsStyle]` - Day Label styling (S, M, T, W ... ). Not Required. Default: { 'font-weight': 500, 'font-size': '14px' };
   `[monthLabelsStyle]` - Month Label Styling (Jan, Feb, Mar ... ). Not Required. Default: {  'font-size': '15px' };
