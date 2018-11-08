@@ -55,4 +55,8 @@ export class AppModule {}
 
 ### 4) Pictures ###
 
-Coming Soon
+![](demo_gif.gif)
+![Day Selection]( day.png "Day Selection")
+![Year Selection]( year.png "Year Selection")
+![Month Selection]( month.png "Month Selection")
+
