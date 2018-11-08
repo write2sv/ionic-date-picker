@@ -113,12 +113,12 @@ const CSS_STYLE = `
   }
 
   .item-selected {
-    background: color($colors, primary);
-    color: color($colors, light) !important;
+    background: #488aff;
+    color: #f4f4f4 !important;
   }
 
   .current-item {
-    color: color($colors, secondary);
+    color: #32db64;
   }
 
   .forward-button {
