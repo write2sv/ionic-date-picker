@@ -26,14 +26,13 @@ const HTML_CODE = `
 
     <ion-grid *ngIf="showView === 'calendar'">
         <ion-row>
-            <ion-col *ngFor="let daylabel of dayLabels" text-center class="days-label">
+            <ion-col *ngFor="let daylabel of dayLabels" text-center [ngStyle]="dayLabelsStyle">
                 {{daylabel}}
             </ion-col>
         </ion-row>
         <ion-row *ngFor="let week of weeks">
-            <ion-col *ngFor="let day of week" (click)="selectDay(day)" [class.current-item]="isToday(day.dayOfMonth)" [class.item-selected]="daySelected && day.dayIdentifier === daySelected.dayIdentifier"
-                text-center>
-                <span [class.not-this-month]="!day.inCalendar">{{day.dayOfMonth}}</span>
+            <ion-col *ngFor="let day of week" (click)="selectDay(day)" [ngStyle]="getDayStyle(day)" text-center>
+                <span [ngStyle]="!day.inCalendar && notInCalendarStyle">{{day.dayOfMonth}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
@@ -47,8 +46,7 @@ const HTML_CODE = `
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col *ngFor="let monthLabel of monthLabels; let i = index" [class.current-item]="i === currentMonth - 1" [class.item-selected]="i === monthSelected - 1"
-                class="months-label" col-3 (click)="selectMonth(i+1)" text-center>
+            <ion-col *ngFor="let monthLabel of monthLabels; let i = index" [ngStyle]="getMonthStyle(i)" col-3 (click)="selectMonth(i+1)" text-center>
                 {{monthLabel}}
             </ion-col>
         </ion-row>
@@ -77,8 +75,7 @@ const HTML_CODE = `
             </ion-col>
         </ion-row> 
         <ion-row>
-            <ion-col *ngFor="let year of years" [class.current-item]="year === currentYear" [class.item-selected]="year === yearSelected" class="months-label"
-                col-3 (click)="selectYear(year)" text-center>
+            <ion-col *ngFor="let year of years" [ngStyle]="getYearStyle(year)" col-3 (click)="selectYear(year)" text-center>
                 {{year}}
             </ion-col>
         </ion-row>
@@ -86,43 +83,14 @@ const HTML_CODE = `
 </div>
 `;
 
-const CSS_STYLE = `
-  .not-this-month {
-    color: #8b8b8b;
-  }
 
+
+const CSS_STYLE = `
   .item {
       .item-inner {
         border-bottom: none !important;
       }
     }
-
-  .days-label {
-    font-weight: 500;
-    font-size: 14px;
-  }
-
-  .months-label {
-    font-size: 15px;
-  }
-
-  .calendar-month-label {
-    font-weight: 500;
-    font-size: 16px;
-  }
-
-  .item-selected {
-    background: #488aff;
-    color: #f4f4f4 !important;
-  }
-
-  .current-item {
-    color: #32db64;
-  }
-
-  .forward-button {
-    float: right;
-  }
 
   ion-icon {
     font-size: 25px;
@@ -133,7 +101,7 @@ const CSS_STYLE = `
     font-weight: 550;
     &.button[disabled] {
       opacity: 1;
-      color: gray;
+      color: gray !important;
     }
   }
 
@@ -154,6 +122,13 @@ export class DatePickerComponent implements OnInit {
   @Input() monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   @Input() dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   @Input() date: Date;
+
+  @Input() notInCalendarStyle = { 'color': '#8b8b8b' };
+  @Input() dayLabelsStyle = { 'font-weight': 500, 'font-size': '14px' };
+  @Input() monthLabelsStyle = {  'font-size': '15px' };
+  @Input() yearLabelsStyle = {  'font-size': '15px' };
+  @Input() itemSelectedStyle = { 'background': '#488aff', 'color': '#f4f4f4 !important' };
+  @Input() todaysItemStyle = { 'color': '#32db64' };
 
   @Output() onSelect: EventEmitter<Date> = new EventEmitter();
 
@@ -307,5 +282,49 @@ export class DatePickerComponent implements OnInit {
     }
     return weeks;
   }
+
+  //Styles
+
+  getDayStyle(day: Day) {
+    let style = {};
+    if (this.isToday(day.dayOfMonth)) {
+      style = this.todaysItemStyle;
+    }
+
+    if (this.daySelected && day.dayIdentifier === this.daySelected.dayIdentifier) {
+      style = {...style, ...this.itemSelectedStyle};
+    }
+
+    return style;
+  }
+
+  getMonthStyle(index) {
+    let style = {};
+    style = {...style, ...this.monthLabelsStyle};
+    if (index === this.currentMonth - 1) {
+      style = {...style, ...this.todaysItemStyle};
+    }
+
+    if (index === this.monthSelected - 1) {
+      style = {...style, ...this.itemSelectedStyle};
+    }
+
+    return style;
+  }
+
+  getYearStyle(year) {
+    let style = {};
+    style = {...style, ...this.yearLabelsStyle};
+    if (year === this.currentYear) {
+      style = {...style, ...this.todaysItemStyle};
+    }
+
+    if (year === this.yearSelected) {
+      style = {...style, ...this.itemSelectedStyle};
+    }
+
+    return style;
+  }
+  //End of styles
 
 }
