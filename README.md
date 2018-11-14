@@ -1,6 +1,6 @@
 # Ionic Date Picker Component
 
-This is a date picker component for your Ionic 3 app.
+This is a date picker component for your Ionic 3 app. If you are looking for Ionic 4 checkout: https://github.com/write2sv/ionic4-date-picker
 
 
 ## How to use ###
