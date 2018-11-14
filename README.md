@@ -51,6 +51,8 @@ export class AppModule {}
   ```
   
   None of these are required options.
+
+  `[backgroundStyle]` - Background color of the component. Default: { 'background-color': '#ffffff' };
   
   `[notInCalendarStyle]` - When a day is not in the calendar. Default: { 'color': '#8b8b8b' };
   

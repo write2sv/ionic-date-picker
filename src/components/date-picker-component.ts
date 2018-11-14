@@ -3,8 +3,8 @@ import { Calendar, Day } from 'dayspan';
 import * as moment from 'moment';
 
 const HTML_CODE = `
-<div>
-    <ion-item *ngIf="showView === 'calendar'">
+<div [ngStyle]="backgroundStyle">
+    <ion-item *ngIf="showView === 'calendar'" [ngStyle]="backgroundStyle">
         <ion-icon name="calendar" item-start>
         </ion-icon>
         <button ion-button clear (click)="showMonthView()" class="calendar-button">
@@ -123,6 +123,7 @@ export class DatePickerComponent implements OnInit {
   @Input() dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   @Input() date: Date;
 
+  @Input() backgroundStyle = { 'background-color': '#ffffff' };
   @Input() notInCalendarStyle = { 'color': '#8b8b8b' };
   @Input() dayLabelsStyle = { 'font-weight': 500, 'font-size': '14px' };
   @Input() monthLabelsStyle = {  'font-size': '15px' };
