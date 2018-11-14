@@ -15,10 +15,10 @@ const HTML_CODE = `
         </button>
 
         <span item-end>
-            <button ion-button clear (click)="previous()">
+            <button ion-button clear [disabled]="!hasPrevious()" (click)="previous()">
                 <ion-icon name="ios-arrow-back"></ion-icon>
             </button>
-            <button ion-button clear (click)="next()">
+            <button ion-button clear [disabled]="!hasNext()" (click)="next()">
                 <ion-icon name="ios-arrow-forward"></ion-icon>
             </button>
         </span>
@@ -32,7 +32,7 @@ const HTML_CODE = `
         </ion-row>
         <ion-row *ngFor="let week of weeks">
             <ion-col *ngFor="let day of week" (click)="selectDay(day)" [ngStyle]="getDayStyle(day)" text-center>
-                <span [ngStyle]="!day.inCalendar && notInCalendarStyle">{{day.dayOfMonth}}</span>
+                <span [ngStyle]="!day.inCalendar && notInCalendarStyle" *ngIf="isValidDay(day)">{{day.dayOfMonth}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
@@ -122,6 +122,8 @@ export class DatePickerComponent implements OnInit {
   @Input() monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   @Input() dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   @Input() date: Date;
+  @Input() fromDate: Date;
+  @Input() toDate: Date;
 
   @Input() backgroundStyle = { 'background-color': '#ffffff' };
   @Input() notInCalendarStyle = { 'color': '#8b8b8b' };
@@ -156,9 +158,22 @@ export class DatePickerComponent implements OnInit {
   }
 
   initOptions() {
-    this.yearSelected = this.date ? this.date.getFullYear() : new Date().getFullYear();
-    this.monthSelected = this.date ? this.date.getMonth() + 1 : new Date().getMonth() + 1;
-    this.dayHighlighted = this.date ? Day.fromDate(this.date) : Day.today();
+
+    if (this.date && this.fromDate && this.date < this.fromDate) {
+      throw new Error('Invalid date input. date must be same or greater than fromDate');
+    }
+
+    if (this.date && this.toDate && this.toDate < this.date) {
+      throw new Error('Invalid date input. date must be same or lesser than toDate');
+    }
+
+    if (this.toDate && this.fromDate && this.fromDate > this.toDate) {
+      throw new Error('Invalid date input. from date must be lesser than or equal to toDate');
+    }
+
+    this.yearSelected = this.date ? this.date.getFullYear() : this.toDate ? this.toDate.getFullYear() : new Date().getFullYear();
+    this.monthSelected = this.date ? this.date.getMonth() + 1 : this.toDate ? this.toDate.getMonth() + 1 :  new Date().getMonth() + 1;
+    this.dayHighlighted = this.date ? Day.fromDate(this.date) : this.toDate ? Day.fromDate(this.toDate) :  Day.today();
 
     if (this.date) {
       this.daySelected = this.dayHighlighted;
@@ -171,6 +186,45 @@ export class DatePickerComponent implements OnInit {
         moment(this.monthSelected + '-01-' + this.yearSelected, 'MM-DD-YYYY')
       )
     );
+  }
+
+  hasPrevious(): boolean {
+    if (!this.fromDate) {
+      return true;
+    }
+
+    let previousMonth;
+    let previousYear;
+    if (this.monthSelected === 1) {
+      previousMonth = 11;
+      previousYear = this.yearSelected - 1;
+    } else {
+      previousMonth = this.monthSelected;
+      previousYear = this.yearSelected;
+    }
+
+    // The last day of previous month should be greatar than or equal to fromDate
+    return new Date(previousYear, previousMonth, 0) >= this.fromDate;
+  }
+
+  hasNext(): boolean {
+    if (!this.toDate) {
+      return true;
+    }
+
+    let nextMonth;
+    let nextYear;
+    if (this.monthSelected === 12) {
+      nextMonth = 0;
+      nextYear = this.yearSelected + 1;
+    } else {
+      nextMonth = this.monthSelected;
+      nextYear = this.yearSelected;
+    }
+
+    // The first day of next month should be less than or equal to toDate
+    return new Date(nextYear, nextMonth, 1) <= this.toDate;
+
   }
 
   previous() {
@@ -200,6 +254,10 @@ export class DatePickerComponent implements OnInit {
   }
 
   selectDay(day: Day) {
+    if (!this.isValidDay(day)) {
+      return;
+    }
+
     this.daySelected = day;
     setTimeout(() => {
       this.confirmDay(day);
@@ -282,6 +340,24 @@ export class DatePickerComponent implements OnInit {
       weeks.push(days);
     }
     return weeks;
+  }
+
+  isValidDay(day: Day) {
+    if (!this.toDate && !this.fromDate) {
+      return true;
+    }
+
+    if (this.toDate && this.fromDate) {
+      return day.toDate() >= this.fromDate && day.toDate() <= this.toDate;
+    }
+
+    if (this.toDate) {
+      return day.toDate() <= this.toDate;
+    }
+
+    if (this.fromDate) {
+      return day.toDate() >= this.fromDate;
+    }
   }
 
   //Styles
