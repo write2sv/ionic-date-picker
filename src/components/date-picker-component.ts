@@ -14,7 +14,7 @@ const HTML_CODE = `
             {{yearSelected}}
         </button>
 
-        <span item-end>
+        <span item-end *ngIf="hasPrevious() || hasNext()">
             <button ion-button clear [disabled]="!hasPrevious()" (click)="previous()">
                 <ion-icon name="ios-arrow-back"></ion-icon>
             </button>
@@ -47,7 +47,7 @@ const HTML_CODE = `
         </ion-row>
         <ion-row>
             <ion-col *ngFor="let monthLabel of monthLabels; let i = index" [ngStyle]="getMonthStyle(i)" col-3 (click)="selectMonth(i+1)" text-center>
-                {{monthLabel}}
+                <span [class.invalidMonth]="!isValidMonth(i)">{{monthLabel}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
@@ -109,6 +109,10 @@ const CSS_STYLE = `
     text-decoration: underline;
     padding-right: 2px !important;
     padding-left: 2px !important;
+  }
+
+  .invalidMonth {
+    'color': '#8b8b8b'
   }
 `;
 
@@ -302,6 +306,10 @@ export class DatePickerComponent implements OnInit {
   }
 
   selectMonth(month: number) {
+    if (!this.isValidMonth(month-1)) {
+      return;
+    }
+
     this.monthSelected = month;
     this.createCalendarWeeks();
     setTimeout(() => {
@@ -358,6 +366,16 @@ export class DatePickerComponent implements OnInit {
     if (this.fromDate) {
       return day.toDate() >= this.fromDate;
     }
+  }
+
+  isValidMonth(index: number) {
+    if (this.toDate.getFullYear() !== this.yearSelected && this.fromDate.getFullYear() !== this.yearSelected) {
+      return true;
+    }
+
+    
+    return new Date(this.yearSelected, index, 1) >= this.fromDate &&
+           new Date(this.yearSelected, index, 1) <= this.toDate;
   }
 
   //Styles
