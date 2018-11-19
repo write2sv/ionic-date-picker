@@ -10,7 +10,7 @@ const HTML_CODE = `
         <button ion-button clear (click)="showMonthView()" class="calendar-button">
             {{monthLabels[monthSelected-1]}}
         </button>
-        <button ion-button clear (click)="showYearView()" class="calendar-button">
+        <button ion-button clear [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">
             {{yearSelected}}
         </button>
 
@@ -32,7 +32,7 @@ const HTML_CODE = `
         </ion-row>
         <ion-row *ngFor="let week of weeks">
             <ion-col *ngFor="let day of week" (click)="selectDay(day)" [ngStyle]="getDayStyle(day)" text-center>
-                <span [ngStyle]="!day.inCalendar && notInCalendarStyle" *ngIf="isValidDay(day)">{{day.dayOfMonth}}</span>
+                <span [ngStyle]="!day.inCalendar && notInCalendarStyle">{{isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;'}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
@@ -55,15 +55,15 @@ const HTML_CODE = `
     <ion-grid *ngIf="showView === 'year'">
         <ion-row>
             <ion-col col-10 text-center>
-                    <div>
-                        <button ion-button icon-only clear (click)="showPreviousYears()">
+                    <div *ngIf="hasPreviousYears() || hasNextYears()">
+                        <button ion-button icon-only clear [disabled]="!hasPreviousYears()" (click)="showPreviousYears()">
                             <ion-icon name="ios-arrow-back"></ion-icon>
                         </button>
                         <button ion-button clear [disabled]="true" class="year-range">
                             {{startYear}} to {{endYear}}
                         </button>
                     
-                        <button ion-button icon-only clear (click)="showNextYears()">
+                        <button ion-button icon-only clear [disabled]="!hasNextYears()" (click)="showNextYears()">
                             <ion-icon name="ios-arrow-forward"></ion-icon>
                         </button>
                     </div>
@@ -82,8 +82,6 @@ const HTML_CODE = `
     </ion-grid>
 </div>
 `;
-
-
 
 const CSS_STYLE = `
   .item {
@@ -112,7 +110,7 @@ const CSS_STYLE = `
   }
 
   .invalidMonth {
-    'color': '#8b8b8b'
+    color: #8b8b8b;
   }
 `;
 
@@ -272,6 +270,14 @@ export class DatePickerComponent implements OnInit {
     this.showView = 'month'; ``
   }
 
+  hasYearSelection() {
+    if (!this.toDate || !this.fromDate) {
+      return true;
+    }
+
+    return this.toDate.getFullYear() !== this.fromDate.getFullYear();
+  }
+
   showYearView() {
     this.showView = 'year';
     let startYear = this.yearSelected - 10;
@@ -287,6 +293,14 @@ export class DatePickerComponent implements OnInit {
   }
 
   generateYears() {
+    if (this.fromDate && this.startYear < this.fromDate.getFullYear()) {
+      this.startYear = this.fromDate.getFullYear();
+    }
+
+    if (this.toDate && this.endYear > this.toDate.getFullYear()) {
+      this.endYear = this.toDate.getFullYear();
+    }
+    
     this.years = [];
     for (let i = this.startYear; i <= this.endYear; i++) {
       this.years.push(i);
@@ -303,6 +317,22 @@ export class DatePickerComponent implements OnInit {
     this.startYear = this.endYear + 1;
     this.endYear = this.startYear + 19;
     this.generateYears();
+  }
+
+  hasPreviousYears() {
+    if (!this.fromDate) {
+      return true;
+    }
+
+    return this.startYear > this.fromDate.getFullYear();
+  }
+
+  hasNextYears() {
+    if (!this.toDate) {
+      return true;
+    }
+
+    return this.endYear < this.toDate.getFullYear();
   }
 
   selectMonth(month: number) {
@@ -369,10 +399,21 @@ export class DatePickerComponent implements OnInit {
   }
 
   isValidMonth(index: number) {
-    if (this.toDate.getFullYear() !== this.yearSelected && this.fromDate.getFullYear() !== this.yearSelected) {
+    if (this.toDate && this.toDate.getFullYear() !== this.yearSelected && this.fromDate && this.fromDate.getFullYear() !== this.yearSelected) {
       return true;
     }
 
+    if (!this.toDate && !this.fromDate) {
+      return true;
+    }
+
+    if (this.fromDate && !this.toDate) {
+      return new Date(this.yearSelected, index, 1) >= this.fromDate;  
+    }
+
+    if (this.toDate && !this.fromDate) {
+      return new Date(this.yearSelected, index, 1) <= this.toDate;
+    }
     
     return new Date(this.yearSelected, index, 1) >= this.fromDate &&
            new Date(this.yearSelected, index, 1) <= this.toDate;
