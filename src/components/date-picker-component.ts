@@ -7,18 +7,18 @@ const HTML_CODE = `
     <ion-item *ngIf="showView === 'calendar'" [ngStyle]="backgroundStyle">
         <ion-icon name="calendar" item-start>
         </ion-icon>
-        <button ion-button clear (click)="showMonthView()" class="calendar-button">
+        <button type="button" ion-button clear (click)="showMonthView()" class="calendar-button">
             {{monthLabels[monthSelected-1]}}
         </button>
-        <button ion-button clear [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">
+        <button type="button" ion-button clear [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">
             {{yearSelected}}
         </button>
 
         <span item-end *ngIf="hasPrevious() || hasNext()">
-            <button ion-button clear [disabled]="!hasPrevious()" (click)="previous()">
+            <button type="button" ion-button clear [disabled]="!hasPrevious()" (click)="previous()">
                 <ion-icon name="ios-arrow-back"></ion-icon>
             </button>
-            <button ion-button clear [disabled]="!hasNext()" (click)="next()">
+            <button type="button" ion-button clear [disabled]="!hasNext()" (click)="next()">
                 <ion-icon name="ios-arrow-forward"></ion-icon>
             </button>
         </span>
@@ -40,7 +40,7 @@ const HTML_CODE = `
     <ion-grid *ngIf="showView === 'month'">
         <ion-row justify-content-end>
             <ion-col text-end>
-                <button ion-button icon-only clear (click)="resetView()">
+                <button type="button" ion-button icon-only clear (click)="resetView()">
                     <ion-icon name="close"></ion-icon>
                 </button>
             </ion-col>
@@ -56,20 +56,20 @@ const HTML_CODE = `
         <ion-row>
             <ion-col col-10 text-center>
                     <div *ngIf="hasPreviousYears() || hasNextYears()">
-                        <button ion-button icon-only clear [disabled]="!hasPreviousYears()" (click)="showPreviousYears()">
+                        <button type="button" ion-button icon-only clear [disabled]="!hasPreviousYears()" (click)="showPreviousYears()">
                             <ion-icon name="ios-arrow-back"></ion-icon>
                         </button>
-                        <button ion-button clear [disabled]="true" class="year-range">
+                        <button type="button" ion-button clear [disabled]="true" class="year-range">
                             {{startYear}} to {{endYear}}
                         </button>
                     
-                        <button ion-button icon-only clear [disabled]="!hasNextYears()" (click)="showNextYears()">
+                        <button type="button" ion-button icon-only clear [disabled]="!hasNextYears()" (click)="showNextYears()">
                             <ion-icon name="ios-arrow-forward"></ion-icon>
                         </button>
                     </div>
             </ion-col>
             <ion-col col-2 text-center>
-                <button ion-button icon-only clear (click)="resetView()">
+                <button type="button" ion-button icon-only clear (click)="resetView()">
                     <ion-icon name="close"></ion-icon>
                 </button>
             </ion-col>
